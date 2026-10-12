@@ -1,0 +1,53 @@
+name: Daily Misconfiguration Scan
+
+on:
+  schedule:
+    # Runs everyday at 08:00 UTC (13:30 IST)
+    - cron: "0 8 * * *"
+  # Allows triggering manual scan from GitHub Actions UI anytime
+  workflow_dispatch:
+
+permissions:
+  id-token: write  # Crucial: Required for requesting GitHub Actions OIDC JWT
+  contents: read
+
+jobs:
+  watchdog-scan:
+    name: AWS Misconfiguration Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+
+      - name: Configure AWS credentials via OIDC (No Long-Lived Keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+          audience: sts.amazonaws.com
+
+      - name: Run AWS Misconfiguration Watchdog
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          python -m watchdog.cli --region us-east-1 --output-json findings.json
+
+      - name: Archive JSON Findings Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: watchdog-findings-report
+          path: findings.json
+          retention-days: 30
