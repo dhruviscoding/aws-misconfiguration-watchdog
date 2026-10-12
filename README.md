@@ -1,6 +1,6 @@
 # 🛡️ AWS Misconfiguration Watchdog
 
-[![CI (Lint & Test)](https://github.com/YOUR_GITHUB_USERNAME/aws-misconfiguration-watchdog/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/aws-misconfiguration-watchdog/actions/workflows/ci.yml)
+[![CI (Lint & Test)](https://github.com/dhruviscoding/aws-misconfiguration-watchdog/actions/workflows/ci.yml/badge.svg)](https://github.com/dhruviscoding/aws-misconfiguration-watchdog/actions/workflows/ci.yml)
 [![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -186,7 +186,7 @@ The tool requires zero mutation permissions. Below is the exact IAM policy deplo
 ### 1. Clone & Set Up Virtual Environment
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/aws-misconfiguration-watchdog.git
+git clone https://github.com/dhruviscoding/aws-misconfiguration-watchdog.git
 cd aws-misconfiguration-watchdog
 
 python -m venv .venv
