@@ -66,6 +66,13 @@ def parse_args(args: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     """Main CLI execution flow."""
+    # Attempt UTF-8 reconfiguration on streams if supported
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
     args = parse_args(argv)
 
     log_level = logging.DEBUG if args.verbose else logging.INFO

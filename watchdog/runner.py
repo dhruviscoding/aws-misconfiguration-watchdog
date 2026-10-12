@@ -4,7 +4,7 @@ import logging
 from collections.abc import Sequence
 
 import boto3
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, NoCredentialsError
 
 from watchdog.checks.base import BaseCheck
 from watchdog.checks.ec2_hygiene import EC2HygieneCheck
@@ -67,6 +67,12 @@ class WatchdogRunner:
                 findings = check.run(session=session, region=region)
                 all_findings.extend(findings)
                 logger.info("Check '%s' completed with %d finding(s)", check.name, len(findings))
+            except NoCredentialsError:
+                logger.error(
+                    "Check '%s' failed: No AWS credentials found. "
+                    "Run 'aws configure' or set AWS_ACCESS_KEY_ID / assume an IAM role.",
+                    check.name,
+                )
             except ClientError as err:
                 logger.error("AWS ClientError executing check '%s': %s", check.name, err)
             except Exception as err:
